@@ -56,8 +56,9 @@ class Reader
      * Get reader
      *
      * @param $xmlFiletemp
-     * @param array $options
      * @return XMLReader
+     * @throws XmlParserException
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function getReader($xmlFiletemp)
     {
