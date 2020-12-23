@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use SimpleXMLElement;
 use XMLReader;
 use DOMNode;
+use Exception;
 
 class Response
 {
@@ -34,8 +35,12 @@ class Response
     public function content(): string
     {
         if (!$this->content) {
-            $content = $this->reader->readOuterXml();
-            $this->content = $this->convertEntities($content);
+            try {
+                $this->content = $this->reader->readOuterXml();
+            }catch (Exception $e){
+                throw new XmlParserException('Error parse XML. '. $e->getMessage(), XmlParserException::ERROR_PARSE_XML, 409, $e,
+                    _p('xml::exceptions.client.error_parse_xml', 'XML error. The XML source could not be parsed.'), null, false);
+            }
         }
         return $this->content;
     }
@@ -65,16 +70,16 @@ class Response
     /**
      * Parse XML
      *
-     * @param string $response String from a CURL response
+     * @param string $content String from a CURL response
      * @return SimpleXMLElement status_code, response
      * @throws PrestashopApiException
      */
-    protected function parseXML($response)
+    protected function parseXML($content)
     {
-        if ($response != '') {
+        if ($content != '') {
             libxml_clear_errors();
             libxml_use_internal_errors(true);
-            $xml = simplexml_load_string($response, 'SimpleXMLElement', LIBXML_NOCDATA);
+            $xml = simplexml_load_string($content, 'SimpleXMLElement', LIBXML_NOCDATA);
             if (libxml_get_errors()) {
                 $msg = var_export(libxml_get_errors(), true);
                 libxml_clear_errors();
@@ -89,23 +94,6 @@ class Response
             throw new XmlParserException('Error parse XML. Content not detected while parsing XML.'. $e->getMessage(), XmlParserException::ERROR_EMPTY_XML, 409, $e,
                 _p('xml::exceptions.client.error_parse_no_content', 'XML error. Content not detected while parsing XML.'), null, false);
         }
-    }
-
-    /**
-     * Replaces all html entities into its original symbols.
-     *
-     * @param string $content
-     * @return string
-     */
-    private function convertEntities($content)
-    {
-        $table = array_map('utf8_encode', array_flip(
-            array_diff(
-                get_html_translation_table(HTML_ENTITIES),
-                get_html_translation_table(HTML_SPECIALCHARS)
-            )
-        ));
-        return preg_replace('/&#[\d\w]+;/', '', strtr($content, $table));
     }
 
     /**
