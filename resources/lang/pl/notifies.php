@@ -10,6 +10,7 @@ return [
             'success_added_source' => 'Pomyślnie dołączono źródło XML Ceneo.',
             'success_updated_source' => 'Pomyślnie zapisano źródło XML Ceneo.',
             'success_deleted_source' => 'Pomyślnie usunięto źródło XML Ceneo.',
+            'success_connected_source' =>'Pomyślnie połączono ze źródłem XML Ceneo.',
         ],
     ],
 ];

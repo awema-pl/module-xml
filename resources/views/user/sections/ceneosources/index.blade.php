@@ -28,7 +28,11 @@
                         <template slot-scope="table">
                             <table-builder :default="table.data">
                                 <tb-column name="name" label="{{ _p('xml::pages.user.ceneosource.name', 'Name') }}"></tb-column>
-                                <tb-column name="url" label="{{ _p('xml::pages.user.ceneosource.url', 'Website address') }}"></tb-column>
+                                <tb-column name="url" label="{{ _p('xml::pages.user.ceneosource.url', 'Website address') }}">
+                                    <template slot-scope="col">
+                                      <div style="max-width: 600px" >@{{ col.data.url }}</div>
+                                    </template>
+                                </tb-column>
                                 <tb-column name="created_at" label="{{ _p('xml::pages.user.ceneosource.created_at', 'Created at') }}"></tb-column>
                                 <tb-column name="manage" label="{{ _p('xml::pages.user.ceneosource.options', 'Options')  }}">
                                     <template slot-scope="col">
@@ -36,6 +40,9 @@
                                             <button type="submit" slot="toggler" class="btn">
                                                 {{_p('xml::pages.user.ceneosource.options', 'Options')}}
                                             </button>
+                                            <cm-button @click="AWEMA.ajax({}, '{{route('xml.user.ceneosource.check_connection') }}/' + col.data.id, 'get')">
+                                                {{_p('xml::pages.user.ceneosource.check_connection', 'Check connection')}}
+                                            </cm-button>
                                             <cm-button @click="AWEMA._store.commit('setData', {param: 'editCeneosource', data: col.data}); AWEMA.emit('modal::edit_ceneosource:open')">
                                                 {{_p('xml::pages.user.ceneosource.edit', 'Edit')}}
                                             </cm-button>

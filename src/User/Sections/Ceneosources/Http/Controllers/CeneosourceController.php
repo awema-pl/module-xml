@@ -11,6 +11,7 @@ use AwemaPL\Auth\Controllers\Traits\RedirectsTo;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use AwemaPL\Xml\Client\XmlClient;
 
 class CeneosourceController extends Controller
 {
@@ -92,5 +93,23 @@ class CeneosourceController extends Controller
         $this->authorize('isOwner', Ceneosource::find($id));
         $this->ceneosources->delete($id);
         return notify(_p('xml::notifies.user.ceneosource.success_deleted_source', 'Success deleted source XML Ceneo.'));
+    }
+
+    /**
+     * Check connection ceneosource
+     *
+     * @param $id
+     * @return array
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function checkConnection($id)
+    {
+        $this->authorize('isOwner', Ceneosource::find($id));
+        $ceneosources = $this->ceneosources->find($id);
+        $error = (new XmlClient(['url' =>$ceneosources->url, 'download_before' =>false]))->ceneo()->fail();
+        if (!empty($error)){
+            return $this->ajaxNotifyError($error, 422);
+        }
+        return notify(_p('xml::notifies.user.ceneosource.success_connected_source', 'Success connected to the source XML Ceneo.'));
     }
 }

@@ -8,13 +8,12 @@ interface Ceneo
 {
 
     /**
-     * Each
+     * All
      *
-     * @param callable $callback First argument is XML string, set return callable true for break read
-     * @param array $options
+     * @return Generator
      * @throws XmlParserException
      */
-    public function each(callable $callback, $options =[]);
+    public function all();
 
     /**
      * Fail

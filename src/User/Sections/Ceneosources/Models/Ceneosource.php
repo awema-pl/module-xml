@@ -12,7 +12,7 @@ use PrintNode\PrintJob;
 class Ceneosource extends Model implements CeneosourceContract, Sourceable
 {
 
-    const PROVIDER_NAME = 'PrintNode';
+    const PROVIDER_NAME = 'Ceneo';
 
     use EncryptableDbAttribute;
 

@@ -8,6 +8,8 @@ use AwemaPL\Xml\User\Sections\Ceneosources\Scopes\EloquentCeneosourceScopes;
 use AwemaPL\Xml\User\Sections\Sources\Repositories\Contracts\SourceRepository;
 use AwemaPL\Repository\Eloquent\BaseRepository;
 use Illuminate\Support\Facades\Auth;
+use \Illuminate\Database\Eloquent\Model;
+use \Illuminate\Database\Eloquent\Collection;
 
 class EloquentCeneosourceRepository extends BaseRepository implements CeneosourceRepository
 {
@@ -79,5 +81,16 @@ class EloquentCeneosourceRepository extends BaseRepository implements Ceneosourc
         $ceneosource = Ceneosource::find($id);
         $ceneosource->source()->delete();
         $this->destroy($id);
+    }
+
+    /**
+     * Find a model by its primary key.
+     *
+     * @param  mixed  $id
+     * @param  array  $columns
+     * @return Model|Collection|static[]|static|null
+     */
+    public function find($id, $columns = ['*']){
+        return parent::find($id, $columns);
     }
 }

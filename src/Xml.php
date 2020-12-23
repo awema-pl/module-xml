@@ -123,6 +123,10 @@ class Xml implements XmlContract
             $this->router
                 ->delete('{id?}', '\AwemaPL\Xml\User\Sections\Ceneosources\Http\Controllers\CeneosourceController@destroy')
                 ->name('destroy');
+            $this->router
+                ->get('/check-connection/{id?}', '\AwemaPL\Xml\User\Sections\Ceneosources\Http\Controllers\CeneosourceController@checkConnection')
+                ->name('check_connection');
+
         });
     }
     

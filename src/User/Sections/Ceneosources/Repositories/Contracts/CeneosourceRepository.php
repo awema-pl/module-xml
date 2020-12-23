@@ -3,6 +3,8 @@
 namespace AwemaPL\Xml\User\Sections\Ceneosources\Repositories\Contracts;
 
 use Illuminate\Http\Request;
+use \Illuminate\Database\Eloquent\Model;
+use \Illuminate\Database\Eloquent\Collection;
 
 interface CeneosourceRepository
 {
@@ -38,5 +40,14 @@ interface CeneosourceRepository
      * @param int $id
      */
     public function delete($id);
+
+    /**
+     * Find a model by its primary key.
+     *
+     * @param  mixed  $id
+     * @param  array  $columns
+     * @return Model|Collection|static[]|static|null
+     */
+    public function find($id, $columns = ['*']);
 
 }

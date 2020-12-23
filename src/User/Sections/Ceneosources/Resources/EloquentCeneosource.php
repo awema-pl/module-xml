@@ -18,10 +18,7 @@ class EloquentCeneosource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email,
-            'location' => $this->location,
-            'source' => ['id' =>$this->source_id],
-            'api_key' => $this->api_key,
+            'url' => $this->url,
             'created_at' =>$this->created_at->format('Y-m-d H:i:s'),
         ];
     }

@@ -2,11 +2,13 @@
 
 namespace AwemaPL\Xml\Client\Readers;
 use AwemaPL\Xml\Client\Config;
+use AwemaPL\Xml\Client\Readers\Responses\Response;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
 use Ramsey\Uuid\Uuid;
 use XMLReader;
+use Generator;
 
 class Reader
 {
@@ -22,31 +24,24 @@ class Reader
     }
 
     /**
-     * Each
+     * All
      *
-     * @param callable $callback First argument is XML string, set return callable true for break read
-     * @param array $options
+     * @return Generator
      * @throws XmlParserException
      */
-    public function each(callable $callback, $options =[]){
+    public function all(){
         $xmlFiletemp = $this->getXmlFiletemp();
         $reader = $this->getReader($xmlFiletemp);
-        $counter = 0;
         try {
             while ($reader->read()) {
                 if ($reader->nodeType == XMLReader::ELEMENT && (!$this->startTag || $reader->name == $this->startTag)) {
-                    $xml = $reader->readOuterXML();
-                    $interrupt = $callback($xml);
-                    $counter++;
-                    if ($interrupt || ($options['limit'] ?? null && $counter >= $options['limit'])){
-                        break;
-                    }
+                    yield new Response($reader);
                 }
             }
             $reader->close();
         } catch (Exception $e){
-            throw new XmlParserException('Error parse XML. '. $e->getMessage(), XmlParserException::ERROR_PARSE_XML, 409, $e,
-                _p('xml::exceptions.client.error_parse_xml', 'XML error. The XML source could not be read.'), null, false);
+            throw new XmlParserException('Error read XML. '. $e->getMessage(), XmlParserException::ERROR_PARSE_XML, 409, $e,
+                _p('xml::exceptions.client.error_read_xml', 'XML error. The XML source could not be read.'), null, false);
         } finally {
             $this->removeXmlFiletemp($xmlFiletemp);
         }

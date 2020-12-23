@@ -47,7 +47,8 @@ return [
             "edit_ceneosource" => "Edit XML Ceneo source",
             "save" => "Save",
             "are_you_sure_delete" => "Are you sure delete?",
-            "confirm" => "Confirm"
+            "confirm" => "Confirm",
+            "check_connection" => "Check connection"
         ]
     ]
 ];
