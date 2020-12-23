@@ -48,7 +48,7 @@ class Response
     public function xml(): SimpleXMLElement
     {
         if (!$this->xml) {
-            $this->xml = $this->parseXMLToDom($this->content());
+            $this->xml = $this->parseXML($this->content());
         }
         return $this->xml;
     }
@@ -63,77 +63,13 @@ class Response
     }
 
     /**
-     * To array
-     *
-     * @return array
-     */
-    public function toArray()
-    {
-        if (!$this->array) {
-            $this->array = $this->parseXmlToArray($this->reader()->expand());
-        }
-        return $this->array;
-    }
-
-    /**
-     * Parse XML to array
-     *
-     * @param XMLReader $oXml
-     * @return array
-     */
-    protected function parseXmlToArray(DOMNode $node) {
-
-            $output =[];
-            switch ($node->nodeType) {
-                case XML_CDATA_SECTION_NODE:
-                case XML_TEXT_NODE:
-                    $output = trim($node->textContent);
-                    break;
-                case XML_ELEMENT_NODE:
-                    for ($i=0, $m=$node->childNodes->length; $i<$m; $i++) {
-                        $child = $node->childNodes->item($i);
-                        $v = $this->parseXmlToArray($child);
-                        if(isset($child->tagName)) {
-                            $t = $child->tagName;
-                            if(!isset($output[$t])) {
-                                $output[$t] = [];
-                            }
-                            $output[$t][] = $v;
-                        }
-                        elseif($v || $v === '0') {
-                            $output = (string) $v;
-                        }
-                    }
-                    if($node->attributes->length && !is_array($output)) { //Has attributes but isn't an array
-                        $output = array('@content'=>$output); //Change output into an array.
-                    }
-                    if(is_array($output)) {
-                        if($node->attributes->length) {
-                            $a = array();
-                            foreach($node->attributes as $attrName => $attrNode) {
-                                $a[$attrName] = (string) $attrNode->value;
-                            }
-                            $output['@attributes'] = $a;
-                        }
-                        foreach ($output as $t => $v) {
-                            if(is_array($v) && count($v)==1 && $t!='@attributes') {
-                                $output[$t] = $v[0];
-                            }
-                        }
-                    }
-                    break;
-            }
-            return $output;
-    }
-
-    /**
-     * Parse XML to Dom
+     * Parse XML
      *
      * @param string $response String from a CURL response
      * @return SimpleXMLElement status_code, response
      * @throws PrestashopApiException
      */
-    protected function parseXMLToDom($response)
+    protected function parseXML($response)
     {
         if ($response != '') {
             libxml_clear_errors();
@@ -153,18 +89,6 @@ class Response
             throw new XmlParserException('Error parse XML. Content not detected while parsing XML.'. $e->getMessage(), XmlParserException::ERROR_EMPTY_XML, 409, $e,
                 _p('xml::exceptions.client.error_parse_no_content', 'XML error. Content not detected while parsing XML.'), null, false);
         }
-    }
-
-    /**
-     * Return the provided parameter's value from the response's JSON.
-     *
-     * @param string $parameter
-     * @param $default
-     * @return mixed
-     */
-    public function getParameter(string $parameter, $default=null)
-    {
-        return Arr::get($this->toArray(), $key, $default);
     }
 
     /**
