@@ -51,7 +51,7 @@ return [
             ],
             'ceneosource' => [
                 'active' => true,
-                'prefix' => '/xml/ceneosources',
+                'prefix' => '/xml/ceneo-sources',
                 'name_prefix' => 'xml.user.ceneosource.',
                 'middleware' => [
                     'web',

@@ -18,7 +18,7 @@ return [
                     ],
                     [
                         'name' => 'XML Ceneo sources',
-                        'link' => '/xml/ceneosources',
+                        'link' => '/xml/ceneo-sources',
                         'key' => 'xml::menus.ceneosources',
                     ],
                 ],
@@ -30,7 +30,7 @@ return [
                     ],
                     [
                         'name' => 'XML Ceneo sources',
-                        'link' => '/xml/ceneosources',
+                        'link' => '/xml/ceneo-sources',
                         'key' => 'xml::menus.ceneosources',
                     ],
                 ],
