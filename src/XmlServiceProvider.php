@@ -22,6 +22,8 @@ use AwemaPL\Xml\User\Sections\Ceneosources\Models\Ceneosource;
 use AwemaPL\Xml\User\Sections\Ceneosources\Policies\CeneosourcePolicy;
 use AwemaPL\Xml\User\Sections\Ceneosources\Services\Contracts\XmlCeneo as XmlCeneoContract;
 use AwemaPL\Xml\User\Sections\Ceneosources\Services\XmlCeneo;
+use AwemaPL\Xml\User\Sections\Ceneosources\Services\Contracts\DataExtractor as XmlCeneoDataExtractorContract;
+use AwemaPL\Xml\User\Sections\Ceneosources\Services\DataExtractor as XmlCeneoDataExtractor;
 
 class XmlServiceProvider extends AwemaProvider
 {
@@ -93,6 +95,7 @@ class XmlServiceProvider extends AwemaProvider
     protected function registerServices()
     {
         $this->app->bind(XmlCeneoContract::class, XmlCeneo::class);
+        $this->app->bind(XmlCeneoDataExtractorContract::class, XmlCeneoDataExtractor::class);
     }
 
     /**

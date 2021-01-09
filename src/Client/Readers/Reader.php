@@ -6,6 +6,7 @@ use AwemaPL\Xml\Client\Readers\Responses\Response;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 use XMLReader;
 use Generator;
@@ -59,7 +60,7 @@ class Reader
     {
         $reader = new XMLReader();
         $url = $this->config->getUrl();
-        if ($this->config->isDownloadBefore()){
+        if ($this->config->isDownloadBefore() && $this->isRemoteUrl($url)){
             try{
                 $client = new Client(['verify' => $this->config->isVerifySsl()]);
                 $client->request('GET', $this->config->getUrl(), [
@@ -110,6 +111,16 @@ class Reader
         if (Storage::exists($xmlFiletemp)){
             Storage::delete($xmlFiletemp);
         }
+    }
+
+    /**
+     * Is remote URL
+     *
+     * @param $url
+     * @return bool
+     */
+    private function isRemoteUrl($url){
+        return Str::startsWith($url, 'http:') || Str::startsWith($url, 'https:') || Str::startsWith($url, 'ftp:');
     }
 
 }
