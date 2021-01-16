@@ -61,6 +61,7 @@ class Reader
         $reader = new XMLReader();
         $url = $this->config->getUrl();
         if ($this->config->isDownloadBefore() && $this->isRemoteUrl($url)){
+            dump('download before ' . $url);
             try{
                 $client = new Client(['verify' => $this->config->isVerifySsl()]);
                 $client->request('GET', $this->config->getUrl(), [
