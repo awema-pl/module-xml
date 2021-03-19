@@ -160,7 +160,13 @@ class Response
         if (sizeof($xml)>1){
             return true;
         }
-        return !empty(trim((string) ($this->xml()->xpath($xpath)[0] ?? '')));
+        $elementXml =$this->xml()->xpath($xpath)[0] ?? null;
+        if ($elementXml){
+            $value = (string) $elementXml;
+            $value = trim($value);
+            return $value !== '';
+        }
+        return false;
     }
 
 }
