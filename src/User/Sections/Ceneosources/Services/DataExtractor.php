@@ -3,6 +3,7 @@
 namespace AwemaPL\Xml\User\Sections\Ceneosources\Services;
 
 use AwemaPL\Xml\User\Sections\Ceneosources\Services\Contracts\DataExtractor as DataExtractorContract;
+use Illuminate\Support\Str;
 use SimpleXMLElement;
 
 class DataExtractor implements DataExtractorContract
@@ -70,18 +71,18 @@ class DataExtractor implements DataExtractorContract
      * @param string $divider
      * @return string
      */
-    public function getCat(SimpleXMLElement $xml, string $divider = '/'):string
+    public function getCat(SimpleXMLElement $xml, string $divider = '/'): string
     {
         $cat = '';
         $crumbs = trim((string)$xml->cat);
-        foreach (explode('/', $crumbs) as $crumb){
+        foreach (explode('/', $crumbs) as $crumb) {
             $crumb = trim($crumb);
             $cat .= (!empty($cat)) ? $divider : '';
             $cat .= $crumb;
         }
         return $cat;
     }
-    
+
     /**
      * Get description
      *
@@ -121,13 +122,13 @@ class DataExtractor implements DataExtractorContract
     public function getAttributes(SimpleXMLElement $xml): array
     {
         $attributes = [];
-        foreach ($xml->attrs->children() as $attribute){
-            $name = (string) $attribute['name'];
-            $value = trim((string) $attribute);
-            if ($name && $value){
+        foreach ($xml->attrs->children() as $attribute) {
+            $name = (string)$attribute['name'];
+            $value = trim((string)$attribute);
+            if ($name && $value) {
                 array_push($attributes, [
-                    'name' =>$name,
-                    'value'=>$value,
+                    'name' => $name,
+                    'value' => $value,
                 ]);
             }
         }
@@ -145,9 +146,9 @@ class DataExtractor implements DataExtractorContract
     public function getAttrubuteValue(string $key, array $attributes, bool $ignoreCase = false)
     {
         $key = $ignoreCase ? $key : mb_strtolower($key);
-        foreach ($attributes as $attribute){
+        foreach ($attributes as $attribute) {
             $name = $ignoreCase ? $attribute['name'] : mb_strtolower($attribute['name']);
-            if ($key === $name){
+            if ($key === $name) {
                 return $attribute['value'];
             }
         }
@@ -160,13 +161,35 @@ class DataExtractor implements DataExtractorContract
      * @param $url
      * @return string
      */
-    public function buildImageId($url):string
+    public function buildImageId($url): string
     {
         $parsedUrl = parse_url($url);
         $path = $parsedUrl['path'] ?? '';
         $query = $parsedUrl['query'] ?? '';
-        $query = $query ? '?' .$query : '';
-        return sprintf('%s%s',$path , $query);
+        $query = $query ? '?' . $query : '';
+        $imageId = sprintf('%s%s', $path, $query);
+        if (strlen($imageId) > 255) {
+            $imageId = $this->mb_strrev($imageId);
+            $imageId = Str::limit($imageId, 255, '');
+            $imageId = $this->mb_strrev($imageId);
+        }
+        return $imageId;
+    }
+
+    /**
+     * String reverse
+     *
+     * @param $str
+     * @return string
+     */
+    private function mb_strrev($str): string
+    {
+        $r = '';
+        for ($i = mb_strlen($str); $i >= 0; $i--) {
+            $r .= mb_substr($str, $i, 1);
+        }
+
+        return $r;
     }
 
 }

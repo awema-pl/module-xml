@@ -84,14 +84,14 @@ class Response
                 $msg = var_export(libxml_get_errors(), true);
                 libxml_clear_errors();
                 if (!$suppressExceptions) {
-                    throw new XmlParserException('Error parse XML. '. $e->getMessage(), XmlParserException::ERROR_PARSE_XML, 409, $e,
+                    throw new XmlParserException('Error parse XML. ', XmlParserException::ERROR_PARSE_XML, 409, null,
                         _p('xml::exceptions.client.error_parse_xml', 'XML error. The XML source could not be parsed.'), null, false);
                 }
             }
             return $xml;
         }
         else {
-            throw new XmlParserException('Error parse XML. Content not detected while parsing XML.'. $e->getMessage(), XmlParserException::ERROR_EMPTY_XML, 409, $e,
+            throw new XmlParserException('Error parse XML. Content not detected while parsing XML.', XmlParserException::ERROR_EMPTY_XML, 409, null,
                 _p('xml::exceptions.client.error_parse_no_content', 'XML error. Content not detected while parsing XML.'), null, false);
         }
     }
