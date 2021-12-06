@@ -38,7 +38,7 @@ return [
         ],
         'adminSidebar' =>[
             [
-                'name' => 'Settings',
+                'name' => 'Settings', 
                 'link' => '/admin/xml/settings',
                 'icon' => 'speed',
                 'permissions' => 'manage_xml_settings',
