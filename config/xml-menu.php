@@ -8,7 +8,7 @@ return [
             [
                 'name' => 'XML',
                 'link' => '/xml/sources',
-                'icon' => 'speed',
+                'icon' => 'report',
                 'key' => 'xml::menus.xml',
                 'children_top' => [
                     [
