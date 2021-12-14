@@ -151,8 +151,8 @@ class Xml implements XmlContract
      */
     public function isMigrated()
     {
-        $tablesInDb = array_map('reset', DB::select('SHOW TABLES'));
-
+        $tablesInDb = \DB::connection()->getDoctrineSchemaManager()->listTableNames();
+        
         $tables = array_values(config('xml.database.tables'));
         foreach ($tables as $table){
             if (!in_array($table, $tablesInDb)){
